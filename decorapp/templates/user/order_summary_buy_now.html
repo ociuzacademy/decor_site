@@ -1,0 +1,68 @@
+{% extends 'user/user_index.html' %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="text-center mb-4">
+        <h1>Order Summary</h1>
+        <p class="text-muted">Order #{{ order.id }}</p>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+
+            <h5>Order Details</h5>
+
+            <p>
+                <strong>Order ID:</strong> #{{ order.id }}
+            </p>
+
+            <p>
+                <strong>Product:</strong> {{ order.product.name }}
+            </p>
+
+            <p>
+                <strong>Quantity:</strong> {{ order.quantity }}
+            </p>
+
+            <p>
+                <strong>Price per item:</strong>
+                ₹{{ order.product.price }}
+            </p>
+
+            <p>
+                <strong>Total Amount:</strong>
+                ₹{{ order.total_amount }}
+            </p>
+
+            <p>
+                <strong>Order Date:</strong>
+                {{ order.created_at }}
+            </p>
+
+            {% if payment %}
+                <p>
+                    <strong>Payment Method:</strong>
+                    {{ payment.get_status_display }}
+                </p>
+
+                <p>
+                    <strong>Transaction ID:</strong>
+                    {{ payment.transaction_id|default:"Not applicable" }}
+                </p>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <div class="text-center">
+        <a href="{% url 'user_index' %}"
+           class="btn btn-primary">
+            Back to Home
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

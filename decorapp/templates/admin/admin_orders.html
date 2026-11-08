@@ -1,0 +1,102 @@
+{% extends 'admin/admin_index.html' %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1 class="mb-4">All Product Orders</h1>
+
+  {% if orders %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead class="thead-light">
+          <tr>
+            <th>Order ID</th>
+            <th>User</th>
+            <th>Email</th>
+            <th>Delivery Date</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+            <tr>
+              <td>#{{ order.id }}</td>
+              <td>{{ order.user.name }}</td>
+              <td>{{ order.user.email }}</td>
+              <td>{{ order.items.first.product.delivery_date }}</td>  <!-- Assuming all items have the same delivery date -->
+              <td>${{ order.total_amount }}</td>
+              <td><span class="badge badge-{% if order.status == 'Paid' %}success{% else %}warning{% endif %}">{{ order.status }}</span></td>
+              <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
+              <td>
+                <button type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#orderModal{{ order.id }}">View</button>
+              </td>
+            </tr>
+
+            <!-- Modal for Order #{{ order.id }} -->
+            <div class="modal fade" id="orderModal{{ order.id }}" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel{{ order.id }}" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="orderModalLabel{{ order.id }}">Order #{{ order.id }} — Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <h6 class="font-weight-bold text-uppercase text-muted small mb-2">Customer</h6>
+                    <p class="mb-1"><strong>Name:</strong> {{ order.user.name }}</p>
+                    <p class="mb-1"><strong>Email:</strong> {{ order.user.email }}</p>
+                    <p class="mb-1"><strong>Address:</strong> {{ order.user.address }}</p>
+                    <p class="mb-3"><strong>Phone:</strong> {{ order.user.phone }}</p>
+                  
+
+                    <h6 class="font-weight-bold text-uppercase text-muted small mb-2">Products</h6>
+                    {% if order.items.all %}
+                      <ul class="list-unstyled mb-3">
+                        {% for item in order.items.all %}
+                          <li class="mb-1">{{ item.product.name }} — Qty: {{ item.quantity }} @ ${{ item.product.price }}</li>
+                        {% endfor %}
+                      </ul>
+                    {% else %}
+                      <p class="text-muted mb-3">No items.</p>
+                    {% endif %}
+
+                    
+
+                    <h6 class="font-weight-bold text-uppercase text-muted small mb-2">Payment</h6>
+                    {% if order.payment %}
+                      <p class="mb-1"><strong>Method:</strong> {{ order.payment.get_status_display }}</p>
+                      <p class="mb-1"><strong>Amount:</strong> ${{ order.payment.total_amount }}</p>
+                      {% if order.payment.cardholder_name %}
+                        <p class="mb-1"><strong>Cardholder:</strong> {{ order.payment.cardholder_name }}</p>
+                      {% endif %}
+                      {% if order.payment.card_number %}
+                        <p class="mb-1"><strong>Card (last 4):</strong> **** {{ order.payment.card_number|slice:"-4:" }}</p>
+                      {% endif %}
+                      {% if order.payment.expiry_date %}
+                        <p class="mb-1"><strong>Expiry:</strong> {{ order.payment.expiry_date }}</p>
+                      {% endif %}
+                      {% if order.payment.transaction_id %}
+                        <p class="mb-1"><strong>Transaction ID:</strong> {{ order.payment.transaction_id }}</p>
+                      {% endif %}
+                    {% else %}
+                      <p class="text-muted mb-0">No payment record for this order.</p>
+                    {% endif %}
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="text-muted">No product orders yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

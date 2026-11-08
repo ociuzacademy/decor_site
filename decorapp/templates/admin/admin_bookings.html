@@ -1,0 +1,39 @@
+{% extends 'admin/admin_index.html' %}
+
+{% block content %}
+  <h1>All Bookings</h1>
+
+  {% if bookings %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Design Name</th>
+          <th>Booking Date</th>
+          <th>User Name</th>
+          <th>User Email</th>
+          <th>User Address</th>  <!-- Added Address Column -->
+          <th>User Phone</th>  <!-- Added Phone Column -->
+          <th>Delivery Date</th>  <!-- Added Delivery Date Column -->
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking in bookings %}
+          <tr>
+            <td>{{ booking.design.name }}</td>
+            <td>{{ booking.booking_date }}</td>
+            <td>{{ booking.user.name }}</td>  <!-- Changed to username if you want the username -->
+            <td>{{ booking.user.email }}</td>
+            <td>{{ booking.user.address }}</td>  <!-- Displaying Address -->
+            <td>{{ booking.user.phone }}</td>  <!-- Displaying Phone -->
+            <td>{{ booking.design.delivery_date }}</td>  <!-- Displaying Delivery Date -->
+            <td>${{ booking.design.price }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No bookings available.</p>
+  {% endif %}
+  
+{% endblock %}

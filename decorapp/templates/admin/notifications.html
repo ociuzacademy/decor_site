@@ -1,0 +1,33 @@
+<!-- templates/user/notifications.html -->
+{% extends 'admin/admin_index.html' %}
+
+{% block content %}
+  <h1>Product Stock Notifications</h1>
+  
+  {% if notifications %}
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Message</th>
+          <th>Created At</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for notification in notifications %}
+          <tr>
+            <td>{{ notification.product.name }}</td>
+            <td>{{ notification.message }}</td>
+            <td>{{ notification.created_at }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="3">No notifications available.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No notifications available.</p>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "admin/admin_index.html" %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>Edit Design</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{ designs.name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control" id="description" name="description" required>{{ designs.description }}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" class="form-control" id="price" name="price" value="{{ designs.price }}" required>
+            </div>
+            <div class="form-group">
+                <label for="stock">Stock</label>
+                <input type="number" class="form-control" id="stock" name="stock" value="{{ designs.stock }}" required>
+            </div>
+            <div class="form-group">
+                <label for="delivery_date">Delivery Date</label>
+                <input type="date" class="form-control" id="delivery_date" name="delivery_date" value="{{ designs.delivery_date|date:'Y-m-d' }}">
+            </div>
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select name="category" id="category" class="form-control" required>
+                        <option value="{{ designs.category.id }}" selected>{{ designs.category.category }}</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.category }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="image">Image</label>
+                <input type="file" class="form-control" id="image" name="image">
+                {% if designs.image %}
+                    <img src="{{ designs.image.url }}" alt="{{ designs.name }}" style="width: 100px; height: auto;">
+                {% else %}
+                    No image
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+    </div>
+{% endblock %}

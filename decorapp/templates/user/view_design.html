@@ -1,0 +1,70 @@
+{% extends 'user/user_index.html' %}
+
+{% block content %}
+  <h1>Our Interior Designs</h1>
+
+  <!-- Category Filter -->
+  <div class="mb-4">
+    <h4>Filter by Category:</h4>
+    <form method="get" action="{% url 'designs_by_category' %}">
+      <select name="category" class="form-control" onchange="this.form.submit()">
+        <option value="">Select Category</option>
+        {% for category in categories %}
+          <option value="{{ category.category }}" {% if request.GET.category == category.category %}selected{% endif %}>
+            {{ category.category }}
+          </option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+
+  <!-- Container for the designs -->
+  <div class="container">
+    <div class="row">
+      {% for design in designs %}
+        <div class="col-md-4 mb-4">
+          <div class="card">
+            <!-- Design Image -->
+            <img src="{{ design.image.url }}" class="card-img-top" alt="{{ design.name }}" style="height: 200px; object-fit: cover;">
+            
+            <div class="card-body">
+              <!-- Design Title -->
+              <h5 class="card-title">{{ design.name }}</h5>
+              
+              <!-- Design Description -->
+              <p class="card-text">{{ design.description }}</p>
+              
+              <!-- Design Price (Optional if applicable) -->
+              {% if design.price %}
+                <p><strong>Price:</strong> ${{ design.price }}</p>
+              {% endif %}
+              {% if design.stock %}
+                <p><strong>Stock:</strong> {{ design.stock }}</p>
+              {% endif %}
+              {% if design.delivery_date %}
+                <p><strong>Delivery Date:</strong> {{ design.delivery_date }}</p>
+              {% endif %}
+              
+              <!-- Link to view the individual design -->
+              <!-- <a href="" class="btn btn-primary">View Design</a> -->
+
+              <!-- Book Now Button (only if design is available in stock) -->
+              {% if design.stock > 0 %}
+                <form method="post" action="{% url 'book_design' %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="design_id" value="{{ design.id }}">
+                  <button type="submit" class="btn btn-success mt-2">Book Now</button>
+                </form>
+              {% else %}
+                <p class="text-danger mt-2">Out of stock</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p>No designs available.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+{% endblock %}

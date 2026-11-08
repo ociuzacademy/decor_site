@@ -1,0 +1,151 @@
+{% extends 'user/user_index.html' %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+        <div>
+            <h1 class="font-weight-bold mb-1">My Orders</h1>
+            <p class="text-muted mb-0">View all your purchases and order details.</p>
+        </div>
+
+        <a href="{% url 'view_products' %}" class="btn btn-outline-primary">
+            Continue Shopping
+        </a>
+    </div>
+
+    {% if orders %}
+
+        <div class="row">
+
+            {% for order in orders %}
+
+            <div class="col-12 mb-3">
+
+                <div class="card shadow-sm border-0 rounded-lg">
+
+                    <div class="card-body p-4">
+
+                        <div class="d-flex justify-content-between align-items-start flex-wrap">
+
+                            <div>
+                                <h5 class="font-weight-bold mb-2">
+                                    Order #{{ order.id }}
+                                </h5>
+
+                                <span class="badge badge-info">
+                                    {{ order.order_type }}
+                                </span>
+
+                                <p class="text-muted small mt-2 mb-1">
+                                    Ordered on:
+                                    {{ order.created_at|date:"M d, Y - H:i" }}
+                                </p>
+                            </div>
+
+                            <div class="text-md-right mt-2 mt-md-0">
+
+                                <span class="badge
+                                    {% if order.status == 'Paid' %}
+                                        badge-success
+                                    {% elif order.status == 'Placed' %}
+                                        badge-primary
+                                    {% else %}
+                                        badge-warning
+                                    {% endif %}">
+                                    {{ order.status }}
+                                </span>
+
+                                <h5 class="text-primary font-weight-bold mt-2">
+                                    ₹{{ order.total_amount }}
+                                </h5>
+
+                            </div>
+
+                        </div>
+
+                        <hr>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-2">
+                                <p class="mb-1">
+                                    <strong>Delivery Date:</strong>
+                                </p>
+
+                                <span class="text-muted">
+                                    {{ order.delivery_date|date:"M d, Y"|default:"Not available" }}
+                                </span>
+                            </div>
+
+                            <div class="col-md-6 mb-2">
+                                <p class="mb-1">
+                                    <strong>Payment Method:</strong>
+                                </p>
+
+                                <span class="text-muted">
+                                    {% if order.payment %}
+                                        {{ order.payment.get_status_display }}
+                                    {% else %}
+                                        Not available
+                                    {% endif %}
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="text-right mt-3">
+
+                            {% if order.url_name == 'order_summary' %}
+
+                                <a href="{% url 'order_summary' order.id %}"
+                                   class="btn btn-outline-primary btn-sm">
+                                    View Order Details
+                                </a>
+
+                            {% else %}
+
+                                <a href="{% url 'order_summary_buy_now' order.id %}"
+                                   class="btn btn-outline-primary btn-sm">
+                                    View Order Details
+                                </a>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <!-- Empty State -->
+        <div class="text-center py-5">
+
+            <h4 class="font-weight-bold">No Orders Yet!</h4>
+
+            <p class="text-muted mb-4">
+                You haven't purchased any products yet.
+                Start exploring our home decor collection.
+            </p>
+
+            <a href="{% url 'view_products' %}" class="btn btn-primary px-4">
+                Browse Products
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

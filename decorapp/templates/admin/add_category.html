@@ -1,0 +1,16 @@
+{% extends "admin/admin_index.html" %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1>Admin - Add New Category</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="category">Category Name</label>
+                <input type="text" name="category" id="category" class="form-control" placeholder="Enter category name" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Category</button>
+            <a href="{% url 'admin_category_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+{% endblock %}

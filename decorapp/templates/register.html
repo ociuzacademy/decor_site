@@ -1,0 +1,130 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="register-container">
+    <h2>Register</h2>
+
+    <!-- Display messages -->
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="name">Name</label>
+        <input type="text" name="name" required><br><br>
+
+        <label for="email">Email</label>
+        <input type="email" name="email" required><br><br>
+
+        <label for="password">Password</label>
+        <div class="password-wrapper">
+            <input type="password" name="password" id="passwordField" required>
+            <span class="toggle-password" onclick="togglePassword()">Show</span>
+        </div>
+        <br>
+
+        <label for="address">Address</label>
+        <textarea name="address" required></textarea><br><br>
+
+        <label for="phone">Phone</label>
+        <input type="text" name="phone" required><br><br>
+
+        <button type="submit">Register</button>
+    </form>
+</div>
+
+<style>
+    .register-container {
+        width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    label {
+        display: block;
+        text-align: left;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #555;
+    }
+
+    input,
+    textarea {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        background-color: black;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: black;
+    }
+
+    .messages {
+        list-style-type: none;
+        padding: 0;
+        color: red;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .password-wrapper {
+        position: relative;
+    }
+
+    .password-wrapper input {
+        width: 100%;
+        padding-right: 60px;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        color: #000;
+    }
+</style>
+<script>
+    function togglePassword() {
+        var passwordField = document.getElementById("passwordField");
+        var toggleText = document.querySelector(".toggle-password");
+    
+        if (passwordField.type === "password") {
+            passwordField.type = "text";
+            toggleText.textContent = "Hide";
+        } else {
+            passwordField.type = "password";
+            toggleText.textContent = "Show";
+        }
+    }
+    </script>
+{% endblock %}

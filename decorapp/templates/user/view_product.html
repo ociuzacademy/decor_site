@@ -1,0 +1,74 @@
+{% extends 'user/user_index.html' %}
+
+{% block content %}
+<div class="container py-5">
+  <!-- Page header -->
+  <div class="text-center mb-5">
+    <h1 class="display-5 font-weight-bold mb-2">Our Products</h1>
+    <p class="text-muted">Browse and add your favorite items to the cart.</p>
+  </div>
+
+  <div class="row">
+    {% for product in products %}
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="card h-100 shadow-sm border-0 rounded-lg overflow-hidden">
+          <a href="{% url 'add_to_cart' product.id %}" class="d-block text-decoration-none">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 220px; object-fit: cover;">
+            {% else %}
+              <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 220px;">
+                <span class="text-muted">No image</span>
+              </div>
+            {% endif %}
+          </a>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title text-dark mb-2">{{ product.name }}</h5>
+            <p class="card-text text-muted small flex-grow-1" style="max-height: 3.6em; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical;">
+              {{ product.description }}
+            </p>
+            <div class="mb-3">
+              <span class="h5 text-primary mb-0">${{ product.price }}</span>
+              <span class="text-muted small ml-2">Stock: {{ product.stock }}</span>
+              {% if product.delivery_date %}
+                  <p class="text-muted small mb-0">Delivery: {{ product.delivery_date }}</p>
+              {% endif %} 
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+              <a href="{% url 'add_to_cart' product.id %}" class="btn btn-primary btn-sm flex-grow-1">Add to Cart</a> 
+           <form method="POST"
+      action="{% url 'buy_now' product.id %}"
+      class="d-flex gap-2 flex-grow-1">
+
+    {% csrf_token %}
+
+    <input type="number"
+           name="quantity"
+           value="1"
+           min="1"
+           max="{{ product.stock }}"
+           class="form-control form-control-sm"
+           style="width: 70px;"
+           required>
+
+    <button type="submit"
+            class="btn btn-success btn-sm flex-grow-1"
+            {% if product.stock <= 0 %}disabled{% endif %}>
+        Buy Now
+    </button>
+
+</form>
+            </div>
+            {% if product.image %}
+              <a href="{% url 'roompreview:studio' %}?product={{ product.id }}" class="btn btn-outline-primary btn-sm btn-block mt-2">Try in my room</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12 text-center py-5">
+        <p class="text-muted lead mb-0">No products available at the moment.</p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
